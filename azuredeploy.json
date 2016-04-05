@@ -2,23 +2,22 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "vmName": {
+    "userImageStorageAccountName": {
       "type": "string",
       "metadata": {
-        "description": "This is the name of your virtual machine"
+        "description": "This is the name of the your storage account"
       }
     },
-    "osDiskUrlParam": {
+    "osDiskVhdUri": {
       "type": "string",
-      "defaultValue": "https://appinternals.blob.core.windows.net/tradefastaio-compact-20150910/disk-0.vhd",
       "metadata": {
-        "description": "URL to OS disk resource"
+        "description": "Uri of the reference image to clone"
       }
     },
-    "dnsNameForPublicIP": {
+    "dnsLabelPrefix": {
       "type": "string",
       "metadata": {
-        "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
+        "description": "DNS Label for the Public IP. Must be lowercase. It should match with the following regular expression: ^[a-z][a-z0-9-]{1,61}[a-z0-9]$ or it will raise an error."
       }
     },
     "adminUserName": {
@@ -35,72 +34,39 @@
     },
     "osType": {
       "type": "string",
+      "defaultValue": "Windows",
       "allowedValues": [
-        "windows",
-        "linux"
+        "Windows"
       ],
       "metadata": {
         "description": "This is the OS that your VM will be running"
       }
     },
-    "location": {
-      "type": "string",
-      "defaultValue": "West US",
-      "allowedValues": [
-        "West US",
-        "East US",
-        "East Asia",
-        "Southeast Asia",
-        "West Europe"
-      ],
-      "metadata": {
-      "description": "Location where resources will be deployed"
-      }
-    },    
     "vmSize": {
       "type": "string",
-      "defaultValue": "Standard_A1",
-      "allowedValues": [
-        "Standard_A1",
-        "Standard_A2",
-        "Standard_A3",
-        "Standard_A4",
-        "Standard_A5",
-        "Standard_A6",
-        "Standard_A7",
-        "Standard_A8",
-        "Standard_A9",
-        "Standard_A10",
-        "Standard_A11",
-        "Standard_D3",
-        "Standard_D4",
-        "Standard_D12",
-        "Standard_D13",
-        "Standard_D14"
-      ],
+      "defaultValue": "A1",
       "metadata": {
         "description": "This is the size of your VM"
       }
     }
   },
   "variables": {
-    "apiVersion": "2015-05-01-preview",    
-    "location": "[parameters('location')]",
-    "publicIPAddressName": "[concat(parameters('vmName'),'PublicIP')]",
-    "vmName": "[parameters('vmName')]",
-    "virtualNetworkName": "[concat(parameters('vmName'),'VNet')]",
-    "nicName": "[concat(parameters('vmName'),'Nic')]",
+    "location": "[resourceGroup().location]",
+    "publicIPAddressName": "userImagePublicIP",
+    "vmName": "userImageVM",
+    "virtualNetworkName": "userImageVNET",
+    "nicName": "userImageVMNic",
     "addressPrefix": "10.0.0.0/16",
     "subnet1Name": "Subnet-1",
     "subnet1Prefix": "10.0.0.0/24",
     "publicIPAddressType": "Dynamic",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
     "subnet1Ref": "[concat(variables('vnetID'),'/subnets/',variables('subnet1Name'))]",
-    "osDiskUrl": "[parameters('osDiskUrlParam')]",
-    "osDiskVhdName": "[concat(variables('osDiskUrl'),'-',variables('vmName'),'.vhd')]"
+    "osDiskVhdName": "[concat('http://',parameters('userImageStorageAccountName'),'.blob.core.windows.net/vhds/',variables('vmName'),'osDisk.vhd')]",
+    "apiVersion": "2015-06-15"
   },
   "resources": [
-    {      
+    {
       "apiVersion": "[variables('apiVersion')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[variables('publicIPAddressName')]",
@@ -108,7 +74,7 @@
       "properties": {
         "publicIPAllocationMethod": "[variables('publicIPAddressType')]",
         "dnsSettings": {
-          "domainNameLabel": "[parameters('dnsNameForPublicIP')]"
+          "domainNameLabel": "[parameters('dnsLabelPrefix')]"
         }
       }
     },
@@ -172,7 +138,7 @@
           "vmSize": "[parameters('vmSize')]"
         },
         "osProfile": {
-          "computername": "[variables('vmName')]",
+          "computerName": "[variables('vmName')]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]"
         },
@@ -183,7 +149,7 @@
             "caching": "ReadWrite",
             "createOption": "FromImage",
             "image": {
-              "uri": "[variables('osDiskUrl')]"
+              "uri": "[parameters('osDiskVhdUri')]"
             },
             "vhd": {
               "uri": "[variables('osDiskVhdName')]"
@@ -196,6 +162,12 @@
               "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]"
             }
           ]
+        },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+             "enabled": "true",
+             "storageUri": "[concat('http://',parameters('userImageStorageAccountName'),'.blob.core.windows.net')]"
+          }
         }
       }
     }

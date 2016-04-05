@@ -2,29 +2,26 @@
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "vmName": {
-      "value": "myVM"
-    },
     "adminUsername": {
       "value": "username"
     },
     "adminPassword": {
       "value": "password!"
     },
-    "osDiskUrlParam": {
-      "value": "osDisk.vhd"
+    "userImageStorageAccountName": {
+      "value": "myStorageAccount"
     },
-    "dnsNameForPublicIP": {
+    "osDiskVhdUri": {
+      "value": "http://ci21c7135add2.blob.core.windows.net/vhds/cid4b28112a1.vhd"
+    },
+    "dnsLabelPrefix": {
       "value": "uniqueDNS"
     },
     "osType": {
-      "value": "linux"
-    },
-    "location": {
-      "value": "West US"
+      "value": "Linux"
     },
     "vmSize": {
-      "value": "Standard_A1"
+      "value": "Standard_D2"
     }
   }
 }
