@@ -30,7 +30,6 @@
     },
     "adminPassword": {
       "type": "securestring",
-      "defaultValue": "Test@123",
       "metadata": {
         "description": "Password for the Virtual Machine"
       }
@@ -61,10 +60,10 @@
   },
   "variables": {
     "location": "[resourceGroup().location]",
-    "publicIPAddressName": "userImagePublicIP",
-    "vmName": "userImageVM",
-    "virtualNetworkName": "userImageVNET",
-    "nicName": "userImageVMNic",
+    "publicIPAddressName": "tradefastaioPublicIP",
+    "vmName": "tradefastaio",
+    "virtualNetworkName": "tradefastaioVNET",
+    "nicName": "tradefastaioVMNic",
     "addressPrefix": "10.0.0.0/16",
     "subnet1Name": "Subnet-1",
     "subnet1Prefix": "10.0.0.0/24",
