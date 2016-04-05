@@ -10,6 +10,7 @@
     },
     "osDiskVhdUri": {
       "type": "string",
+      "defaultValue": "https://appinternals.blob.core.windows.net/tradefastaio-compact-20150910-ian01/disk-0.vhd",
       "metadata": {
         "description": "Uri of the reference image to clone"
       }
