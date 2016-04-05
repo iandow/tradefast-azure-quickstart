@@ -1,0 +1,7 @@
+{
+  "itemDisplayName": "Create a Tradefast VM from the tradefastaio-compact-20150910 base image",
+  "description": "This template allows you to create a Virtual Machine from the base Tradefast image. This template also deploys new a Virtual Network, Public IP addresses and a Network Interface for your VM.",
+  "summary": "Create a Virtual Machine from the Tradefast base image",
+  "githubUsername": "iandow",
+  "dateUpdated": "2016-04-05"
+}
