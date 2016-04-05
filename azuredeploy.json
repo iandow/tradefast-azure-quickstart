@@ -97,7 +97,7 @@
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
     "subnet1Ref": "[concat(variables('vnetID'),'/subnets/',variables('subnet1Name'))]",
     "osDiskUrl": "[parameters('osDiskUrlParam')]",
-    "osDiskVhdName": "[concat(variables('osDiskUrl'),'-',variables('vmName'),'.vhd')]",
+    "osDiskVhdName": "[concat(variables('osDiskUrl'),'-',variables('vmName'),'.vhd')]"
   },
   "resources": [
     {      
