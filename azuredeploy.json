@@ -5,7 +5,7 @@
     "userImageStorageAccountName": {
       "type": "string",
       "metadata": {
-        "description": "This is the name of the your storage account"
+        "description": "This is the name of the your storage account. Must be the same as where the reference vhd is stored."
       }
     },
     "osDiskVhdUri": {
@@ -23,12 +23,14 @@
     },
     "adminUserName": {
       "type": "string",
+      "defaultValue": "testuser",
       "metadata": {
         "description": "UserName for the Virtual Machine"
       }
     },
     "adminPassword": {
       "type": "securestring",
+      "defaultValue": "Test@123",
       "metadata": {
         "description": "Password for the Virtual Machine"
       }
